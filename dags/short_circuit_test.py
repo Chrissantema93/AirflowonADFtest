@@ -1,5 +1,6 @@
 from airflow import DAG
 from datetime import datetime
+from include import test
 import os
 import time
 from airflow.operators.dummy import DummyOperator
@@ -8,7 +9,7 @@ from airflow.operators.python import ShortCircuitOperator
 
 environment = os.getenv("AIRFLOW_VAR_ENVIRONMENT", "")
 
-default_args = {"owner": "philips poc test", "retries": 1}
+default_args = {"owner": "test", "retries": 1}
 
 with DAG(
     default_args=default_args,
@@ -29,6 +30,10 @@ with DAG(
     python_sleep_task = PythonOperator(
         task_id="python_sleep_task", python_callable=lambda: time.sleep(10)
     )
+
+    python_test_task = PythonOperator(
+        task_id="python_test_task", python_callable=test.test_py
+    )
     dummy_task_3_run_in_env = ShortCircuitOperator(
         task_id="dummy_task_3_run_in_env",
         doc="ShortCircuit to make sure dummy_task_3 only runs in Development, QA",
@@ -44,5 +49,6 @@ with DAG(
 
 dummy_task_1 >> [dummy_task_2, dummy_task_3_run_in_env]
 dummy_task_2 >> [python_sleep_task]
+python_sleep_task >> [python_test_task] 
 dummy_task_3_run_in_env >> [dummy_task_3]
 dummy_task_3 >> [dummy_task_4]
