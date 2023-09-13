@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime
-from include import test
+from AirflowonADFtest.include import test
 import os
 import time
 from airflow.operators.dummy import DummyOperator
