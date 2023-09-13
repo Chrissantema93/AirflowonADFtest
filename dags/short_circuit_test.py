@@ -12,7 +12,7 @@ default_args = {"owner": "philips poc test", "retries": 1}
 
 with DAG(
     default_args=default_args,
-    dag_id="short_circuit_test",
+    dag_id="short_circuit_test1",
     start_date=datetime(2023, 1, 1),
     schedule_interval=None,
     catchup=False,
