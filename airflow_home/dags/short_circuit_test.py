@@ -1,8 +1,8 @@
 from airflow import DAG
 from datetime import datetime
-from include import test
 import os
 import time
+from airflow_home.include import test
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.python import ShortCircuitOperator
@@ -15,7 +15,7 @@ default_args = {"owner": "test", "retries": 1}
 
 with DAG(
     default_args=default_args,
-    dag_id="short_circuit_test1",
+    dag_id="short_circuit_test2",
     start_date=datetime(2023, 1, 1),
     schedule_interval=None,
     catchup=False,
