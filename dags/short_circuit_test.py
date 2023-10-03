@@ -2,7 +2,6 @@ from airflow import DAG
 from datetime import datetime
 import os
 import time
-from airflow_home.include import test
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.python import ShortCircuitOperator
