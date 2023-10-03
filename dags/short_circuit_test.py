@@ -6,6 +6,8 @@ import time
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.python import ShortCircuitOperator
+from airflow.sensors.time_sensor import TimeSensorAsync
+
 
 environment = os.getenv("AIRFLOW_VAR_ENVIRONMENT", "")
 
@@ -21,6 +23,12 @@ with DAG(
     doc_md="Testing the ShortCircuitOperator",
     tags=["testing"],
 ) as dag:
+    start_1 = TimeSensorAsync(
+    task_id="timeout_after_second_date_in_the_future_async",
+    timeout=1,
+    soft_fail=True,
+    target_time=(datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=3)).time(),
+)
     dummy_task_1 = DummyOperator(
         task_id="dummy_task_1", doc="dummy to test shortcircuit"
     )
@@ -47,6 +55,8 @@ with DAG(
         task_id="dummy_task_4", doc="dummy to test shortcircuit"
     )
 
+
+start_1 >> [dummy_task_1]
 dummy_task_1 >> [dummy_task_2, dummy_task_3_run_in_env]
 dummy_task_2 >> [python_sleep_task]
 python_sleep_task >> [python_test_task] 
